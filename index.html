@@ -5,8 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Refund Calculator</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Sofia+Pro:wght@400;700&display=swap');
+
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Sofia Pro', sans-serif;
             margin: 50px;
             display: flex;
             justify-content: center;
@@ -21,6 +23,9 @@
             align-items: center;
             justify-content: space-between;
             margin-bottom: 10px;
+        }
+        .first-row {
+            gap: 10px; /* Adds spacing between the "Period Paid For" input and dropdown */
         }
         label {
             flex: 1;
@@ -45,7 +50,7 @@
             margin-top: 20px;
             cursor: pointer;
             width: 100%;
-            background-color: #007BFF;
+            background-color: #6e8fad; /* Color extracted from the image */
             color: white;
             border: none;
             font-size: 16px;
@@ -63,12 +68,12 @@
     <div class="container">
         <h2>Refund Calculator</h2>
 
-        <div class="input-group">
+        <div class="input-group first-row">
             <label for="periodPaidFor">Period Paid For:</label>
             <input type="number" id="periodPaidFor" placeholder="Enter period">
             <select id="timeUnit">
                 <option value="days">Days</option>
-                <option value="weeks">Weeks</option>
+                <option value="months">Months</option>
             </select>
             <span class="instructions">Please look at the [NAME] of the offering</span>
         </div>
@@ -102,7 +107,7 @@
                 let monthsPaidFor = periodPaidFor / 30; 
                 let monthsToRefund = monthsPaidFor - monthsReceived;
                 refundAmount = (totalAmountPaid / monthsPaidFor) * monthsToRefund;
-            } else if (timeUnit === "weeks") {
+            } else if (timeUnit === "months") {
                 refundAmount = (totalAmountPaid / periodPaidFor) * (periodPaidFor - monthsReceived);
             }
 
