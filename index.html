@@ -7,58 +7,109 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            text-align: center;
             margin: 50px;
+            display: flex;
+            justify-content: center;
         }
-        input {
-            padding: 10px;
-            width: 200px;
-            margin: 5px;
+        .container {
+            width: 500px;
+            display: flex;
+            flex-direction: column;
+        }
+        .input-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        label {
+            flex: 1;
+            text-align: left;
+            font-weight: bold;
+        }
+        input, select {
+            padding: 8px;
+            width: 150px;
             text-align: center;
+            flex: 1;
+        }
+        .instructions {
+            flex: 2;
+            text-align: left;
+            font-size: 12px;
+            color: #555;
+            padding-left: 10px;
         }
         button {
             padding: 10px 20px;
-            margin: 10px;
+            margin-top: 20px;
             cursor: pointer;
+            width: 100%;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            font-size: 16px;
         }
         .result {
             font-size: 20px;
             font-weight: bold;
             margin-top: 20px;
+            text-align: center;
         }
     </style>
 </head>
 <body>
 
-    <h2>Refund Calculator</h2>
+    <div class="container">
+        <h2>Refund Calculator</h2>
 
-    <label>Days Paid For:</label>
-    <input type="number" id="daysPaidFor" placeholder="Enter days paid"><br>
+        <div class="input-group">
+            <label for="periodPaidFor">Period Paid For:</label>
+            <input type="number" id="periodPaidFor" placeholder="Enter period">
+            <select id="timeUnit">
+                <option value="days">Days</option>
+                <option value="weeks">Weeks</option>
+            </select>
+            <span class="instructions">Please look at the [NAME] of the offering</span>
+        </div>
 
-    <label>Total Amount Paid:</label>
-    <input type="number" id="totalAmountPaid" placeholder="Enter total amount"><br>
+        <div class="input-group">
+            <label for="totalAmountPaid">Total Amount Paid:</label>
+            <input type="number" id="totalAmountPaid" placeholder="Enter amount">
+            <span class="instructions">Please look at the [PRICE] of the offering</span>
+        </div>
 
-    <label>Months Received:</label>
-    <input type="number" id="monthsReceived" placeholder="Enter months received"><br>
+        <div class="input-group">
+            <label for="monthsReceived">Months Received:</label>
+            <input type="number" id="monthsReceived" placeholder="Enter months received">
+            <span class="instructions">You can find a patient's order history in CXP by clicking on ‘Orders’</span>
+        </div>
 
-    <button onclick="calculateRefund()">Calculate Refund</button>
+        <button onclick="calculateRefund()">Calculate Refund</button>
 
-    <div class="result" id="result"></div>
+        <div class="result" id="result"></div>
+    </div>
 
     <script>
         function calculateRefund() {
-            let daysPaidFor = parseFloat(document.getElementById('daysPaidFor').value);
+            let periodPaidFor = parseFloat(document.getElementById('periodPaidFor').value);
+            let timeUnit = document.getElementById('timeUnit').value;
             let totalAmountPaid = parseFloat(document.getElementById('totalAmountPaid').value);
             let monthsReceived = parseFloat(document.getElementById('monthsReceived').value);
+            let refundAmount;
 
-            let monthsPaidFor = daysPaidFor / 30;
-            let monthsToRefund = monthsPaidFor - monthsReceived;
-            let amountToRefund = (totalAmountPaid / monthsPaidFor) * monthsToRefund;
+            if (timeUnit === "days") {
+                let monthsPaidFor = periodPaidFor / 30; 
+                let monthsToRefund = monthsPaidFor - monthsReceived;
+                refundAmount = (totalAmountPaid / monthsPaidFor) * monthsToRefund;
+            } else if (timeUnit === "weeks") {
+                refundAmount = (totalAmountPaid / periodPaidFor) * (periodPaidFor - monthsReceived);
+            }
 
-            if (isNaN(amountToRefund) || amountToRefund < 0) {
+            if (isNaN(refundAmount) || refundAmount < 0) {
                 document.getElementById('result').innerHTML = "Invalid input. Check values!";
             } else {
-                document.getElementById('result').innerHTML = `Refund Amount: $${amountToRefund.toFixed(2)}`;
+                document.getElementById('result').innerHTML = `Refund Amount: $${refundAmount.toFixed(2)}`;
             }
         }
     </script>
